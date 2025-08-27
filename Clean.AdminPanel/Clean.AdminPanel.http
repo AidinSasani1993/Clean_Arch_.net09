@@ -1,0 +1,6 @@
+@Clean.AdminPanel_HostAddress = http://localhost:5071
+
+GET {{Clean.AdminPanel_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
