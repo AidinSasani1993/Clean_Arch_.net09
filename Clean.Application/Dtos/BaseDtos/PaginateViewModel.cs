@@ -1,4 +1,4 @@
-﻿namespace Clean.Application.Framework
+﻿namespace Clean.Application.Dtos.BaseDtos
 {
     public class PaginateViewModel<TData> where TData : class
     {

@@ -1,6 +1,6 @@
-﻿using Clean.Application.Dtos.Categories.Requests;
+﻿using Clean.Application.Dtos.BaseDtos;
+using Clean.Application.Dtos.Categories.Requests;
 using Clean.Application.Dtos.Categories.Responses;
-using Clean.Application.Framework;
 using Clean.Application.Repositories;
 using Clean.Application.Services.CategoryServices;
 using Clean.Common.Exceptions;
@@ -51,7 +51,7 @@ namespace Clean.Service.Categories
 
         }
 
-        public async Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync()
+        public async Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync(BaseFilterDto Dto)
         {
             var result =
                 new PaginateViewModel<IEnumerable<GetCategoryDto>>();
@@ -65,6 +65,8 @@ namespace Clean.Service.Categories
 
             result.Records = category;
             result.TotalCount = category.Count;
+            result.PageNumber = Dto.PageNumber;
+            result.PageSize = Dto.PageSize;
 
             return result; 
         }
