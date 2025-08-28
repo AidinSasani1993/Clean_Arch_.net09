@@ -60,7 +60,10 @@ namespace Clean.Domain.Entities
         public void SetActive()
         {
             if(!IsActive)
-            IsActive = true;
+            {
+                IsActive = true;
+                IsDeleted = false;
+            }
             else
             {
                 throw new BussinessException(ErrorMessage.CategoryIsActive);
@@ -70,7 +73,14 @@ namespace Clean.Domain.Entities
         public void SetDelete()
         {
             if (!IsDeleted)
+            {
                 IsDeleted = true;
+                IsActive = false;
+            }
+            else
+            {
+                throw new BussinessException(ErrorMessage.CategoryIsDelete);
+            }
         }
 
         #region [-Validation Methods-]

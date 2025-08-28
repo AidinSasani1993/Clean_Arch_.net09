@@ -22,7 +22,7 @@ namespace Clean.Service.Categories
             var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
             {
-                throw new NotFoundException("");
+                throw new NotFoundException(ErrorMessage.IdNotFount);
             }
             category.SetActive();
             await _categoryRepository.SaveChangesAsync();
@@ -31,25 +31,60 @@ namespace Clean.Service.Categories
         public async Task<long> CreateAsync(CategoryDto dto)
         {
             await CheckDuplicate(0, dto);
-            //var category = new Category(dto.Title, dto.Description);
             var category = Category.Create(dto.Title, dto.Description);
             await _categoryRepository.CreateAsync(category);
             return category.Id;
         }
 
-        public Task DeleteAsync(long id)
+        public async Task DeleteAsync(long id)
         {
-            throw new NotImplementedException();
+            var category = await _categoryRepository.GetByIdAsync(id);
+            if (category == null)
+            {
+                throw new NotFoundException(ErrorMessage.IdNotFount);
+            }
+
+            //await _categoryRepository.DeleteAsync(id);
+
+            category.SetDelete();
+            await _categoryRepository.SaveChangesAsync();
+
         }
 
-        public Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync()
+        public async Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var result =
+                new PaginateViewModel<IEnumerable<GetCategoryDto>>();
+
+            var query = await _categoryRepository.GetAllAsync();
+            var category = query.Select(a => new GetCategoryDto()
+            {
+                Title = a.Title,
+                Description = a.Description,
+            }).ToList();
+
+            result.Records = category;
+            result.TotalCount = category.Count;
+
+            return result; 
         }
 
-        public Task<GetCategoryDto> GetById(long id)
+        public async Task<GetCategoryDto> GetById(long id)
         {
-            throw new NotImplementedException();
+            if (id == null)
+            {
+                throw new NotFoundException(ErrorMessage.IdNotFount);
+            }
+            
+            var query = await _categoryRepository.GetByIdAsync(id);
+
+            var category = new GetCategoryDto
+            {
+                Title = query.Title,
+                Description = query.Description,
+            };
+
+            return category;
         }
 
         public async Task<long> UpdateAsync(long id, CategoryDto dto)
