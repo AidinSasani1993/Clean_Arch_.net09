@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Clean.Application\Clean.Application.csproj" />
+    <ProjectReference Include="..\Clean.Common\Clean.Common.csproj" />
     <ProjectReference Include="..\Clean.Dapper\Clean.Dapper.csproj" />
     <ProjectReference Include="..\Clean.Repository\Clean.Repository.csproj" />
     <ProjectReference Include="..\Clean.Service\Clean.Service.csproj" />

@@ -28,7 +28,7 @@ namespace Clean.AdminPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync(BaseFilterDto dto)
+        public async Task<IActionResult> GetAllAsync([FromQuery] BaseFilterDto dto)
         {
             var result = await _categoryService.GetAllAsync(dto);
             return Ok(result);
