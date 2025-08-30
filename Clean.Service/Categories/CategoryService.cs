@@ -55,7 +55,7 @@ namespace Clean.Service.Categories
         {
             var result =
                 new PaginateViewModel<IEnumerable<GetCategoryDto>>();
-
+            var skip = (dto.PageNumber - 1) * dto.PageSize;
             var query = await _categoryRepository.GetAllAsync();
             var category = query.Select(a => new GetCategoryDto()
             {
@@ -63,7 +63,7 @@ namespace Clean.Service.Categories
                 Description = a.Description,
             }).ToList();
 
-            result.Records = category;
+            result.Records = category.Skip(skip).Take(dto.PageSize).ToList();
             result.TotalCount = category.Count;
             result.PageNumber = dto.PageNumber;
             result.PageSize = dto.PageSize;
