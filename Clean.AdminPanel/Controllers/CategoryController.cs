@@ -1,4 +1,5 @@
-﻿using Clean.Application.Dtos.Categories.Requests;
+﻿using Clean.Application.Dtos.BaseDtos;
+using Clean.Application.Dtos.Categories.Requests;
 using Clean.Application.Dtos.Categories.Responses;
 using Clean.Application.Framework;
 using Clean.Application.Services.CategoryServices;
@@ -27,9 +28,9 @@ namespace Clean.AdminPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(BaseFilterDto dto)
         {
-            var result = await _categoryService.GetAllAsync();
+            var result = await _categoryService.GetAllAsync(dto);
             return Ok(result);
         }
 
@@ -58,5 +59,13 @@ namespace Clean.AdminPanel.Controllers
         {
             await _categoryService.ActiveAsync(id);
         }
+
+        [HttpPost("CategoryProduct")]
+        public async Task<IActionResult> CreateCategoryProductAsync(CategoryProductDto dto)
+        {
+            var result = await _categoryService.CreateCategoryProduct(dto);
+            return Ok(result);
+        }
+
     }
 }

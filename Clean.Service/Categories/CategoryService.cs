@@ -51,7 +51,7 @@ namespace Clean.Service.Categories
 
         }
 
-        public async Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync(BaseFilterDto Dto)
+        public async Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync(BaseFilterDto dto)
         {
             var result =
                 new PaginateViewModel<IEnumerable<GetCategoryDto>>();
@@ -65,8 +65,8 @@ namespace Clean.Service.Categories
 
             result.Records = category;
             result.TotalCount = category.Count;
-            result.PageNumber = Dto.PageNumber;
-            result.PageSize = Dto.PageSize;
+            result.PageNumber = dto.PageNumber;
+            result.PageSize = dto.PageSize;
 
             return result; 
         }
@@ -97,6 +97,23 @@ namespace Clean.Service.Categories
             await _categoryRepository.SaveChangesAsync();
             return category.Id;
         }
+
+        public async Task<long> CreateCategoryProduct(CategoryProductDto dto)
+        {
+            var category = Category.Create(dto.Category.Title, dto.Category.Description);
+
+            foreach (var i in dto.Products)
+            {
+                category.AddProduct(Product.Create(i.Title, i.Amount, i.Fee, i.CategoryRef, i.Code));
+            }
+
+            await _categoryRepository.CreateAsync(category);
+
+            return category.Id;
+
+        }
+
+        //Validations
 
         private async Task CheckDuplicate(long id, CategoryDto dto)
         {

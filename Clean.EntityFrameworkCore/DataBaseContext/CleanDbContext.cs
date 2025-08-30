@@ -17,13 +17,15 @@ namespace Clean.EntityFrameworkCore.DataBaseContext
         #endregion
 
         #region [-Props-]
-        public DbSet<Category> Categories { get; set; } 
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Product> Products { get; set; }
         #endregion
 
         #region [-OnModelCreating(ModelBuilder modelBuilder)-]
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
             base.OnModelCreating(modelBuilder);
         } 
         #endregion

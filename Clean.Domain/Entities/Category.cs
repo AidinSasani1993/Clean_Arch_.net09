@@ -14,7 +14,7 @@ namespace Clean.Domain.Entities
         #region [-ctors-]
         protected Category()
         {
-
+            Products = new List<Product>();
         }
 
         public Category(string title, string description) : this()
@@ -31,7 +31,13 @@ namespace Clean.Domain.Entities
         public string? Description { get; private set; }
         public bool IsActive { get; private set; } = true;
         public bool IsDeleted { get; private set; } = false;
+        public ICollection<Product> Products { get; private set; }
         #endregion
+
+        public void AddProduct(Product product)
+        {
+            Products.Add(product);
+        }
 
         #region [-Create(string title, string? description)-]
         public static Category Create(string title, string? description)

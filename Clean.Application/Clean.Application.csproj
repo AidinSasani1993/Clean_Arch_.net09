@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Clean.Domain\Clean.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\Products\Responses\" />
+  </ItemGroup>
+
 </Project>

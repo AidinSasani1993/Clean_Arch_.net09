@@ -4,6 +4,7 @@ using Clean.Dapper.Categories;
 using Clean.Dapper.DapperDatabaseContext;
 using Clean.EntityFrameworkCore.DataBaseContext;
 using Clean.Repository.Categories;
+using Clean.Repository.Products;
 using Clean.Service.Categories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -18,6 +19,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ICategoryDapperService, CategoryDapperService>();
 builder.Services.AddScoped<CleanDbContext>();
 builder.Services.AddScoped<DapperContext>();
