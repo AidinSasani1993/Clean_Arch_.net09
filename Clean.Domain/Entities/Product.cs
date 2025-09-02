@@ -4,7 +4,7 @@ using Clean.Domain.Framework;
 
 namespace Clean.Domain.Entities
 {
-    public class Product: Entity<long>, IActive, ISoftDeleted
+    public class Product : Entity<long>, IActive, ISoftDeleted
     {
 
         #region [-Fields-]

@@ -11,8 +11,10 @@
         public const string CategoryTitleDuplicate = "عنوان نوع کالا نمیتواند تکراری باشد";
         public const string CategoryIsActive = "دسته کالا غیر فعال نیست";
         public const string CategoryIsDelete = "دسته کالا قبلا غیر فعال شده";
-        public const string CategoryDescriptionMaxLength = "توضیحات نوع کالا نمیتواند بیشتر از {0} باشد"; 
+        public const string CategoryDescriptionMaxLength = "توضیحات نوع کالا نمیتواند بیشتر از {0} باشد";
         #endregion
+
+        public const string CustomerTitleDuplicate = "مشتری نمیتواند تکراری باشد";
 
     }
 }
