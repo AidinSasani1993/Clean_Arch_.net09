@@ -10,7 +10,7 @@ namespace Clean.EntityFrameworkCore.Configurations
         {
             builder.ToTable(nameof(Customer));
             builder.HasKey(a => a.Id);
-            builder.Property(a => a.FirstName).HasMaxLength(Customer.FirstNameMinLength).IsRequired();
+            builder.Property(a => a.FirstName).HasMaxLength(Customer.FirstNameMaxLength).IsRequired();
         }
     }
 }
