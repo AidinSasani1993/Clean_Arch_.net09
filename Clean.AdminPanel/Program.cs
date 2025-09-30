@@ -1,3 +1,4 @@
+using Clean.Application.UseCase.Queries.Categories;
 using Clean.Common.Extentions;
 using Clean.Dapper.DapperDatabaseContext;
 using Clean.EntityFrameworkCore.DataBaseContext;
@@ -15,10 +16,6 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-//builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-//builder.Services.AddScoped<ICategoryService, CategoryService>();
-//builder.Services.AddScoped<IProductRepository, ProductRepository>();
-//builder.Services.AddScoped<ICategoryDapperService, CategoryDapperService>();
 
 builder.Services.AddRegisterRepository(typeof(CategoryRepository).Assembly);
 builder.Services.AddRegisterService(typeof(CategoryService).Assembly);
@@ -27,6 +24,12 @@ builder.Services.AddScoped<DapperContext>();
 
 builder.Services.AddDbContext<CleanDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Clean")));
+
+builder.Services.AddMediatR
+    (cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(GetCategoryHandler).Assembly));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

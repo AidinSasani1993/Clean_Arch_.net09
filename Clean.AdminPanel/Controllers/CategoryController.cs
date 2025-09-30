@@ -3,6 +3,8 @@ using Clean.Application.Dtos.Categories.Requests;
 using Clean.Application.Dtos.Categories.Responses;
 using Clean.Application.Framework;
 using Clean.Application.Services.CategoryServices;
+using Clean.Application.UseCase.Queries.Categories;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
@@ -14,10 +16,12 @@ namespace Clean.AdminPanel.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
+        private readonly IMediator _mediator;
 
-        public CategoryController(ICategoryService categoryService)
+        public CategoryController(ICategoryService categoryService, IMediator mediator)
         {
             _categoryService = categoryService;
+            _mediator = mediator;
         }
 
         [HttpPost]
@@ -28,9 +32,9 @@ namespace Clean.AdminPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync([FromQuery] BaseFilterDto dto)
+        public async Task<IActionResult> GetAllAsync([FromQuery] BaseFilterDto filter)
         {
-            var result = await _categoryService.GetAllAsync(dto);
+            var result = await _mediator.Send(new GetCategoryQuery(filter));
             return Ok(result);
         }
 
