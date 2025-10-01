@@ -1,5 +1,6 @@
 ﻿using Clean.Domain.Entities;
 using Clean.Domain.Entities.Customers;
+using Clean.Domain.Entities.Roles;
 using Clean.Domain.Entities.Users;
 using Clean.EntityFrameworkCore.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -7,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Clean.EntityFrameworkCore.DataBaseContext
 {
-    public class CleanDbContext : IdentityDbContext<User>
+    public class CleanDbContext : DbContext
     {
         public CleanDbContext(DbContextOptions options) : base(options)
         {
@@ -25,6 +26,8 @@ namespace Clean.EntityFrameworkCore.DataBaseContext
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
         #endregion
 
         #region [-OnModelCreating(ModelBuilder modelBuilder)-]

@@ -10,7 +10,7 @@ namespace Clean.Common.Extentions
         public const string JustPersionWord = "^[ء,آ-ی ]+$";
         public const int RealNationalNumberLength = 10;
 
-        public static bool IsJustPersionWord(this string word)
+        public static bool IsJustPersianWord(this string word)
         {
             return IsMached(word, JustPersionWord);
         }

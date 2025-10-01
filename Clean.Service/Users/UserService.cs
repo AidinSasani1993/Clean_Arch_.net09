@@ -19,12 +19,12 @@ namespace Clean.Service.Users
 
         public async Task<string> CreateAsync(CreateUserDto dto)
         {
-            if (dto.Age < 18) 
+            if (dto.BirthDay < ) 
             {
                 throw new BussinessException("حداقل سن باید 18 سال باشد");
             }
 
-            bool fName = dto.FirstName.IsJustPersionWord();
+            bool fName = dto.FirstName.IsJustPersianWord();
             if (!fName)
             {
                 throw new ValidationException("نام باید فارسی باشد");
@@ -32,11 +32,11 @@ namespace Clean.Service.Users
 
             var user = new User
             {
-                Age = dto.Age,
+                BirthDay = dto.BirthDay,
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email,
-                UserName = dto.UserName,
+                Username = dto.UserName,
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);

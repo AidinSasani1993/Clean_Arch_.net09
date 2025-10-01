@@ -1,4 +1,6 @@
-﻿namespace Clean.Application.Dtos.Users
+﻿using Clean.Domain.Entities.Customers;
+
+namespace Clean.Application.Dtos.Users
 {
     public class CreateUserDto
     {
@@ -7,6 +9,8 @@
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public int Age { get; set; }
+        public DateTime BirthDay { get; set; }
+        public string PhoneNumber { get; set; }
+        public SexTypeEnum SexType { get; set; }
     }
 }

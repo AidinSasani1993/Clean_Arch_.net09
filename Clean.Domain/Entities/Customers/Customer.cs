@@ -101,7 +101,7 @@ namespace Clean.Domain.Entities.Customers
                 throw new BussinessException("");
             }
 
-            bool result = firstName.IsJustPersionWord();
+            bool result = firstName.IsJustPersianWord();
             if (!result)
             {
                 throw new ValidationException("");
@@ -122,7 +122,7 @@ namespace Clean.Domain.Entities.Customers
                 throw new BussinessException("");
             }
 
-            bool result = lastName.IsJustPersionWord();
+            bool result = lastName.IsJustPersianWord();
             if (!result)
             {
                 throw new ValidationException("");
