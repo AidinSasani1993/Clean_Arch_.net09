@@ -33,9 +33,7 @@ builder.Services.AddMediatR
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(GetCategoryHandler).Assembly));
 
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<CleanDbContext>() 
-    .AddDefaultTokenProviders();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

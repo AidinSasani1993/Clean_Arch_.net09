@@ -1,25 +1,25 @@
 ﻿using Clean.Application.Dtos.Users;
+using Clean.Application.Repositories;
 using Clean.Application.Services.Users;
 using Clean.Common.Exceptions;
 using Clean.Common.Extentions;
 using Clean.Domain.Entities.Users;
-using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
 namespace Clean.Service.Users
 {
     public class UserService : IUserService
     {
-        private readonly UserManager<User> _userManager;
+        private readonly IUserRepository _userRepository;
 
-        public UserService(UserManager<User> userManager)
+        public UserService(IUserRepository userRepository)
         {
-            _userManager = userManager;
+            _userRepository = userRepository;
         }
 
         public async Task<string> CreateAsync(CreateUserDto dto)
         {
-            if (dto.BirthDay < ) 
+            if (dto.BirthDay.AddYears(18) < DateTime.Today) 
             {
                 throw new BussinessException("حداقل سن باید 18 سال باشد");
             }
@@ -30,27 +30,12 @@ namespace Clean.Service.Users
                 throw new ValidationException("نام باید فارسی باشد");
             }
 
-            var user = new User
-            {
-                BirthDay = dto.BirthDay,
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                Email = dto.Email,
-                Username = dto.UserName,
-            };
+            var user = new User(dto.UserName, dto.Email, dto.Password, dto.FirstName, 
+                dto.LastName, dto.BirthDay, dto.PhoneNumber, dto.SexType, dto.IsActive);
 
-            var result = await _userManager.CreateAsync(user, dto.Password);
-
-            if (!result.Succeeded)
-            {
-                foreach (var item in result.Errors)
-                {
-                    return item.Description;
-                }
-                
-            }
-
-            return user.Id.ToString();
+            await _userRepository.CreateAsync(user);
+            await _userRepository.SaveChangesAsync();
+            return user.Username;
 
         }
     }

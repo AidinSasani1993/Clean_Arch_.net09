@@ -22,11 +22,7 @@ namespace Clean.Repository.Framework
 
         public virtual async Task CreateAsync(TEntity entity)
         {
-            using (Context)
-            {
-                await Db_Set.AddAsync(entity);
-                await SaveChangesAsync();
-            }
+            await Db_Set.AddAsync(entity);
         }
 
         public virtual async Task DeleteAsync(TKey id)

@@ -40,8 +40,8 @@ namespace Clean.Domain.Entities.Users
         public DateTime CreateDate { get; private set; }
         public bool IsActive { get; private set; } = true;
         public bool IsDeleted { get; private set; } = false;
-        public long RoleRef { get; private set; }
-        public Role Role { get; private set; }
+        public long? RoleRef { get; private set; }
+        public Role? Role { get; private set; }
         #endregion
 
         #region [-ctors-]
