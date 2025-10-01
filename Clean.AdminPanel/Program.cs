@@ -1,9 +1,11 @@
-using Clean.Application.UseCase.Queries.Categories;
+﻿using Clean.Application.UseCase.Queries.Categories;
 using Clean.Common.Extentions;
 using Clean.Dapper.DapperDatabaseContext;
+using Clean.Domain.Entities.Users;
 using Clean.EntityFrameworkCore.DataBaseContext;
 using Clean.Repository.Categories;
 using Clean.Service.Categories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -31,6 +33,9 @@ builder.Services.AddMediatR
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(GetCategoryHandler).Assembly));
 
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddEntityFrameworkStores<CleanDbContext>() 
+    .AddDefaultTokenProviders();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

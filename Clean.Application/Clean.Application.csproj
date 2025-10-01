@@ -17,9 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dtos\Users\" />
     <Folder Include="Dtos\Products\Responses\" />
-    <Folder Include="Services\Users\" />
     <Folder Include="UseCase\Commands\" />
   </ItemGroup>
 
