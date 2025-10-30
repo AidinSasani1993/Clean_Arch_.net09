@@ -13,6 +13,8 @@ namespace Clean.AdminPanel.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[ServiceFilter(typeof(ServiceAvailabilityActionFilter))]
+    //[ProducesResponseType(typeof(ResponseResultViewModel<AgentResponseViewModel>), StatusCodes.Status200OK)]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
@@ -25,6 +27,7 @@ namespace Clean.AdminPanel.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<long> CreateAsync(CategoryDto dto)
         {
             var result = await _categoryService.CreateAsync(dto);

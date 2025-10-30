@@ -33,6 +33,7 @@ namespace Clean.Service.Categories
             await CheckDuplicate(0, dto);
             var category = Category.Create(dto.Title, dto.Description);
             await _categoryRepository.CreateAsync(category);
+            await _categoryRepository.SaveChangesAsync();
             return category.Id;
         }
 
