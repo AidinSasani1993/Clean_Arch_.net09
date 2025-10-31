@@ -10,5 +10,6 @@ namespace Clean.Application.Services.Customers
         Task DeleteAsync(long id);
         Task<CustomerDto> GetByIdAsync(long id);
         Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync(BaseFilterDto filter);
+        Task<IEnumerable<CustomerDto>> GetAllAsync();
     }
 }

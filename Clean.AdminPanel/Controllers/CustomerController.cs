@@ -1,5 +1,6 @@
 ﻿using Clean.Application.Dtos.Customers;
 using Clean.Application.Services.Customers;
+using Clean.Domain.Entities.People;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,6 +24,12 @@ namespace Clean.AdminPanel.Controllers
             return Ok(result);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var result = await _customerService.GetAllAsync();
+            return Ok(new { Count = result.Count(), Customer2 = result.Take(5) });
+        }
 
     }
 }

@@ -4,13 +4,13 @@ using Clean.Application.Repositories;
 using Clean.Application.Services.Customers;
 using Clean.Common.Exceptions;
 using Clean.Domain.Entities.Customers;
-using System.Threading.Tasks;
 
 namespace Clean.Service.Customers
 {
     public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
+        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(10);
 
         #region [-ctor-]
         public CustomerService(ICustomerRepository customerRepository)
@@ -31,6 +31,7 @@ namespace Clean.Service.Customers
                                                    dto.MobileNumber);
 
             await _customerRepository.CreateAsync(customer);
+            await _customerRepository.SaveChangesAsync();
             return customer.Id;
 
         } 
@@ -70,6 +71,27 @@ namespace Clean.Service.Customers
             }
         }
 
+        public async Task<IEnumerable<CustomerDto>> GetAllAsync()
+        {
+            try
+            {
+                Console.WriteLine($"➡️ Thread {Thread.CurrentThread.ManagedThreadId} شروع درخواست جدید");
+                var query = await _customerRepository.GetAllAsync();
+                var result = query.Select(a => new CustomerDto
+                {
+                    FirstName = a.FirstName,
+                    LastName = a.LastName,
+                    MobileNumber = a.MobileNumber,
+                }).ToList();
+                await Task.Delay(1000); // شبیه‌سازی کار سنگین (مثل Excel Export)
+                Console.WriteLine($"✅ Thread {Thread.CurrentThread.ManagedThreadId} پایان درخواست");
+                return result;
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
 
     }
 }
