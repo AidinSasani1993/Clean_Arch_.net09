@@ -1,5 +1,6 @@
 ﻿using Clean.Domain.Entities;
 using Clean.Domain.Entities.Customers;
+using Clean.Domain.Entities.Files;
 using Clean.Domain.Entities.Roles;
 using Clean.Domain.Entities.Users;
 using Clean.EntityFrameworkCore.Configurations;
@@ -28,6 +29,7 @@ namespace Clean.EntityFrameworkCore.DataBaseContext
         public DbSet<Customer> Customers { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<FileEntity> Files { get; set; }
         #endregion
 
         #region [-OnModelCreating(ModelBuilder modelBuilder)-]

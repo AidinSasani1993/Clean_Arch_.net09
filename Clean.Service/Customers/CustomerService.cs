@@ -42,9 +42,25 @@ namespace Clean.Service.Customers
             throw new NotImplementedException();
         }
 
-        public Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync(BaseFilterDto filter)
+        public async Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync(BaseFilterDto filter)
         {
-            throw new NotImplementedException();
+            var result = new PaginateViewModel<IEnumerable<CustomerDto>>();
+            var skip = (filter.PageNumber - 1) * filter.PageSize;
+            var customers = await _customerRepository.GetAllAsync();
+            var resultData = customers.Select(a => new CustomerDto
+            {
+                BirthDay = a.BirthDay,
+                FirstName = a.FirstName,
+                LastName = a.LastName,
+                SexType = a.SexType,
+                MobileNumber = a.MobileNumber,
+                NationalCode = a.NationalCode,
+            }).ToList();
+            result.Records = resultData.AsEnumerable().Skip(skip).Take(filter.PageSize);
+            result.PageSize = filter.PageSize;
+            result.PageNumber = filter.PageNumber;
+            result.TotalCount = customers.Count();
+            return result;
         }
 
         public Task<CustomerDto> GetByIdAsync(long id)
@@ -75,7 +91,7 @@ namespace Clean.Service.Customers
         {
             try
             {
-                Console.WriteLine($"➡️ Thread {Thread.CurrentThread.ManagedThreadId} شروع درخواست جدید");
+                Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId} شروع درخواست جدید");
                 var query = await _customerRepository.GetAllAsync();
                 var result = query.Select(a => new CustomerDto
                 {
@@ -83,8 +99,8 @@ namespace Clean.Service.Customers
                     LastName = a.LastName,
                     MobileNumber = a.MobileNumber,
                 }).ToList();
-                await Task.Delay(1000); // شبیه‌سازی کار سنگین (مثل Excel Export)
-                Console.WriteLine($"✅ Thread {Thread.CurrentThread.ManagedThreadId} پایان درخواست");
+                await Task.Delay(1000); 
+                Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId} پایان درخواست");
                 return result;
             }
             finally

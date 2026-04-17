@@ -4,6 +4,6 @@ namespace Clean.Application.Services.Users
 {
     public interface IUserService
     {
-        Task<string> CreateAsync(CreateUserDto dto);
+        Task<GetCreateUserDto> CreateAsync(CreateUserDto dto);
     }
 }

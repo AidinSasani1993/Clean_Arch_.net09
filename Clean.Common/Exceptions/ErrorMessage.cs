@@ -16,5 +16,9 @@
 
         public const string CustomerTitleDuplicate = "مشتری نمیتواند تکراری باشد";
 
+
+        public const string FirstName = "نام باید فارسی باشد";
+        public const string PersonOlde = "نام باید فارسی باشد";
+
     }
 }

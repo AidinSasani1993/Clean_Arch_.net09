@@ -17,17 +17,17 @@ namespace Clean.Service.Users
             _userRepository = userRepository;
         }
 
-        public async Task<string> CreateAsync(CreateUserDto dto)
+        public async Task<GetCreateUserDto> CreateAsync(CreateUserDto dto)
         {
             if (dto.BirthDay.AddYears(18) < DateTime.Today) 
             {
-                throw new BussinessException("حداقل سن باید 18 سال باشد");
+                return new GetCreateUserDto { ErrorCode = 400, Message = ErrorMessage.PersonOlde };
             }
 
             bool fName = dto.FirstName.IsJustPersianWord();
             if (!fName)
             {
-                throw new ValidationException("نام باید فارسی باشد");
+                return new GetCreateUserDto { ErrorCode = 400, Message = ErrorMessage.FirstName };
             }
 
             var user = new User(dto.UserName, dto.Email, dto.Password, dto.FirstName, 
@@ -35,7 +35,7 @@ namespace Clean.Service.Users
 
             await _userRepository.CreateAsync(user);
             await _userRepository.SaveChangesAsync();
-            return user.Username;
+            return new GetCreateUserDto { ErrorCode = 200, Message = $"UserName : {user.Username}" };
 
         }
     }

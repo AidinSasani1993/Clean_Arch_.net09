@@ -18,6 +18,7 @@ namespace Clean.Service.Products
         {
             var product = Product.Create(dto.Title, dto.Amount, dto.Fee, dto.CategoryRef, dto.Code);
             await _productRepository.CreateAsync(product);
+            await _productRepository.SaveChangesAsync();
             return product.Id;
         }
     }

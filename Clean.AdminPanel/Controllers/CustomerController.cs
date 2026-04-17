@@ -1,4 +1,5 @@
-﻿using Clean.Application.Dtos.Customers;
+﻿using Clean.Application.Dtos.BaseDtos;
+using Clean.Application.Dtos.Customers;
 using Clean.Application.Services.Customers;
 using Clean.Domain.Entities.People;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +30,12 @@ namespace Clean.AdminPanel.Controllers
         {
             var result = await _customerService.GetAllAsync();
             return Ok(new { Count = result.Count(), Customer2 = result.Take(5) });
+        }
+
+        [HttpGet("GetCustomerPaginate")]
+        public async Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync([FromQuery] BaseFilterDto filter)
+        {
+            return await _customerService.GetAllAsync(filter);
         }
 
     }

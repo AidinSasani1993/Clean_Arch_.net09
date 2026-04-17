@@ -1,7 +1,7 @@
 ﻿namespace Clean.Domain.Framework
 {
-    public interface IModel<TKek> where TKek : struct
+    public interface IModel<TKey> where TKey : struct
     {
-        public TKek Id { get; set; }
+        public TKey Id { get; set; }
     }
 }
