@@ -32,6 +32,7 @@ namespace Clean.Domain.Entities
         public bool IsActive { get; private set; } = true;
         public bool IsDeleted { get; private set; } = false;
         public ICollection<Product> Products { get; private set; }
+        public string Test { get; private set; }
         #endregion
 
         public void AddProduct(Product product)
@@ -48,6 +49,7 @@ namespace Clean.Domain.Entities
             {
                 Title = title,
                 Description = description,
+                Test = "test"
             };
             return category;
         }

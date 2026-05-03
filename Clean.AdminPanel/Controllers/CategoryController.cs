@@ -5,6 +5,7 @@ using Clean.Application.Framework;
 using Clean.Application.Services.CategoryServices;
 using Clean.Application.UseCase.Queries.Categories;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
@@ -13,6 +14,7 @@ namespace Clean.AdminPanel.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     //[ServiceFilter(typeof(ServiceAvailabilityActionFilter))]
     //[ProducesResponseType(typeof(ResponseResultViewModel<AgentResponseViewModel>), StatusCodes.Status200OK)]
     public class CategoryController : ControllerBase
@@ -26,12 +28,21 @@ namespace Clean.AdminPanel.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
+        [HttpPost("create")]
+        //[ProducesResponseType(typeof(CategoryDto), StatusCodes.Status200OK)]
+        //[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<long> CreateAsync(CategoryDto dto)
+        public async Task<IActionResult> CreateAsync(CategoryDto dto)
         {
             var result = await _categoryService.CreateAsync(dto);
-            return result;
+            return Ok(result);
+        }
+
+        [HttpGet("GetAll2")]
+        public async Task<IActionResult> GetAllAsync2()
+        {
+            var result = await _categoryService.GetAllAsync2();
+            return Ok(result);
         }
 
         [HttpGet]

@@ -5,6 +5,6 @@ namespace Clean.Application.Repositories
 {
     public interface IUserRepository : IRepository<User, long>
     {
-
+        Task<User> GetByEmailAsync(string Email);
     }
 }

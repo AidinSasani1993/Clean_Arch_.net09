@@ -23,6 +23,12 @@ namespace Clean.AdminPanel.Controllers
             return Ok(result);
         }
 
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginAsync(LoginDto dto)
+        {
+            var result = await _userService.Login(dto);
+            return Ok(result);
+        }
 
     }
 }

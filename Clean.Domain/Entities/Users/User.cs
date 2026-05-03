@@ -4,6 +4,8 @@ using Clean.Domain.Entities.Customers;
 using Clean.Domain.Entities.Roles;
 using Clean.Domain.Framework;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Clean.Domain.Entities.Users
 {
@@ -63,7 +65,7 @@ namespace Clean.Domain.Entities.Users
         {
             Username = username;
             Email = email;
-            ChangePassword(password);
+            HashPassword(password);
             Password = password;
             ValidationFirstName(firstName);
             FirstName = firstName;
@@ -74,8 +76,15 @@ namespace Clean.Domain.Entities.Users
             PhoneNumber = phoneNumber;
             SexType = sexType;
             IsActive = isActive;
-        } 
+        }
         #endregion
+
+        private static string HashPassword(string password)
+        {
+            using var sha = SHA256.Create();
+            var bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+            return Convert.ToBase64String(bytes);
+        }
 
         #region [-GetUserPassHash(string plainText)-]
         public static string GetUserPassHash(string plainText)

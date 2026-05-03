@@ -17,6 +17,17 @@ namespace Clean.Service.Categories
             _categoryRepository = categoryRepository;
         }
 
+        public async Task<IEnumerable<GetCategoryDto>> GetAllAsync2()
+        {
+            var category = await _categoryRepository.GetAllAsync();
+            var result = category.Select(x => new GetCategoryDto
+            {
+                Title = x.Title,
+                Description = x.Description,
+            }).ToList();
+            return result;
+        }
+
         public async Task ActiveAsync(long id)
         {
             var category = await _categoryRepository.GetByIdAsync(id);
@@ -28,13 +39,14 @@ namespace Clean.Service.Categories
             await _categoryRepository.SaveChangesAsync();
         }
 
-        public async Task<long> CreateAsync(CategoryDto dto)
+        public async Task<ResponseDto> CreateAsync(CategoryDto dto)
         {
             await CheckDuplicate(0, dto);
             var category = Category.Create(dto.Title, dto.Description);
             await _categoryRepository.CreateAsync(category);
             await _categoryRepository.SaveChangesAsync();
-            return category.Id;
+            var result = new ResponseDto { Title = "اطلاعات ذخیره شد", ResponseCode = 200 };
+            return result;
         }
 
         public async Task DeleteAsync(long id)
@@ -99,7 +111,7 @@ namespace Clean.Service.Categories
             return category.Id;
         }
 
-        public async Task<long> CreateCategoryProduct(CategoryProductDto dto)
+        public async Task<ResponseDto> CreateCategoryProduct(CategoryProductDto dto)
         {
             var category = Category.Create(dto.Category.Title, dto.Category.Description);
 
@@ -109,8 +121,11 @@ namespace Clean.Service.Categories
             }
 
             await _categoryRepository.CreateAsync(category);
-
-            return category.Id;
+            await _categoryRepository.SaveChangesAsync();
+            
+            var result = new ResponseDto { Title = "اطلاعات ذخیره شد", ResponseCode = 200 };
+            
+            return result;
 
         }
 
