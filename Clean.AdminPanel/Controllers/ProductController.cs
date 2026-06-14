@@ -15,7 +15,7 @@ namespace Clean.AdminPanel.Controllers
             _productServices = productServices;
         }
 
-        [HttpPost]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateAsync(CreateProductDto dto)
         {
             var result = await _productServices.CreateAsync(dto);

@@ -10,10 +10,12 @@ namespace Clean.AdminPanel.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILogger _logger;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, ILogger<UserController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpPost("Register")]
@@ -26,7 +28,9 @@ namespace Clean.AdminPanel.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> LoginAsync(LoginDto dto)
         {
+            _logger.LogInformation("Request For Login", DateTime.UtcNow.ToString());
             var result = await _userService.Login(dto);
+            _logger.LogInformation("Respons For Login And Failed", DateTime.UtcNow.ToString());
             return Ok(result);
         }
 

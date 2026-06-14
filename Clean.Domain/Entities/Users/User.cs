@@ -61,7 +61,8 @@ namespace Clean.Domain.Entities.Users
                     DateTime birthDay,
                     string phoneNumber,
                     SexTypeEnum sexType,
-                    bool isActive) : this()
+                    bool isActive,
+                    long? roleRef) : this()
         {
             Username = username;
             Email = email;
@@ -76,6 +77,7 @@ namespace Clean.Domain.Entities.Users
             PhoneNumber = phoneNumber;
             SexType = sexType;
             IsActive = isActive;
+            RoleRef = roleRef;
         }
         #endregion
 

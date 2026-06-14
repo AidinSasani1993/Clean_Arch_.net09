@@ -1,17 +1,23 @@
 ﻿using Clean.Application.UseCase.Queries.Categories;
+using Clean.Common.Exceptions;
 using Clean.Common.Extentions;
 using Clean.Dapper.DapperDatabaseContext;
-using Clean.Domain.Entities.Users;
 using Clean.EntityFrameworkCore.DataBaseContext;
 using Clean.Repository.Categories;
 using Clean.Service.Categories;
+using Clean.Service.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Timeouts;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
+using Serilog;
+using Serilog.Sinks.MSSqlServer;
+using System.Collections.ObjectModel;
+using System.Data;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +30,9 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddRegisterRepository(typeof(CategoryRepository).Assembly);
 builder.Services.AddRegisterService(typeof(CategoryService).Assembly);
-builder.Services.AddScoped<CleanDbContext>();
 builder.Services.AddScoped<DapperContext>();
+builder.Services.AddScoped<IAuthorizationHandler, ActiveUserHandler>();
+//builder.Services.AddScoped<CleanDbContext>();
 
 builder.Services.AddDbContext<CleanDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CleanDb")));
@@ -100,6 +107,30 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+builder.Services.AddAuthorization(policy =>
+{
+    policy.AddPolicy("AdminCustom", a =>
+    {
+        a.Requirements.Add(new UserRequirement());
+    });
+});
+
+//builder.Services.AddRequestTimeouts(options => {
+//    options.DefaultPolicy =
+//        new RequestTimeoutPolicy { Timeout = TimeSpan.FromMilliseconds(1500) };
+//    options.AddPolicy("MyPolicy", TimeSpan.FromSeconds(2));
+//});
+
+builder.Services.AddRequestTimeouts(options =>
+{
+    options.DefaultPolicy = new RequestTimeoutPolicy
+    {
+        Timeout = TimeSpan.FromSeconds(2),
+        TimeoutStatusCode = StatusCodes.Status503ServiceUnavailable
+    };
+});
+
+
 //builder.Services.AddCors(options =>
 //{
 //    options.AddDefaultPolicy(policy =>
@@ -107,6 +138,60 @@ builder.Services.AddSwaggerGen(options =>
 //              .AllowAnyHeader()
 //              .AllowAnyMethod());
 //});
+
+var connectionString = builder.Configuration.GetConnectionString("CleanDb");
+
+var columnOptions = new ColumnOptions
+{
+    AdditionalColumns = new Collection<SqlColumn>
+    {
+        new SqlColumn { ColumnName = "SourceContext", DataType = SqlDbType.NVarChar, DataLength = 512 },
+    }
+};
+
+columnOptions.Store.Remove(StandardColumn.Properties);
+columnOptions.Store.Add(StandardColumn.LogEvent); 
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.MSSqlServer(
+        connectionString: connectionString,
+        sinkOptions: new MSSqlServerSinkOptions
+        {
+            TableName = "Logs",
+            AutoCreateSqlTable = true 
+        },
+        columnOptions: columnOptions
+    )
+    .CreateLogger();
+
+builder.Host.UseSerilog();
+
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.OnRejected = async (context, token) =>
+    {
+        context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+        context.HttpContext.Response.ContentType = "application/json";
+
+        await context.HttpContext.Response.WriteAsJsonAsync(new
+        {
+            Message = ErrorMessage.RateLimitingError
+        }, token);
+    };
+
+    options.AddFixedWindowLimiter("fixed", opt =>
+    {
+        opt.PermitLimit = 3;
+        opt.Window = TimeSpan.FromMinutes(2);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 0;
+    });
+});
+
 
 var app = builder.Build();
 
@@ -117,6 +202,27 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
     app.MapOpenApi();
 }
+
+app.MapGet("/test-timeout", async (CancellationToken ct) =>
+{
+    await Task.Delay(10000, ct);
+    return Results.Ok("Done");
+})
+.WithRequestTimeout(TimeSpan.FromSeconds(2));
+
+app.Use(async (context, next) =>
+{
+    context.RequestAborted.Register(() =>
+    {
+        Console.WriteLine("REQUEST ABORTED");
+    });
+
+    await next();
+});
+
+app.UseRateLimiter();
+
+app.UseRequestTimeouts();
 
 app.UseHttpsRedirection();
 

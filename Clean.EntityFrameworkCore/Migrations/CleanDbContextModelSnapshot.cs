@@ -220,9 +220,6 @@ namespace Clean.EntityFrameworkCore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("RoleId")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("RoleRef")
                         .HasColumnType("bigint");
 
@@ -235,9 +232,9 @@ namespace Clean.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleRef");
 
-                    b.ToTable("Users");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("Clean.Domain.Entities.Product", b =>
@@ -255,7 +252,7 @@ namespace Clean.EntityFrameworkCore.Migrations
                 {
                     b.HasOne("Clean.Domain.Entities.Roles.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleRef");
 
                     b.Navigation("Role");
                 });

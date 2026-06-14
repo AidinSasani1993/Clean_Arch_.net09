@@ -1,32 +1,38 @@
 ﻿using Clean.Application.Dtos.BaseDtos;
 using Clean.Application.Dtos.Categories.Requests;
-using Clean.Application.Dtos.Categories.Responses;
-using Clean.Application.Framework;
 using Clean.Application.Services.CategoryServices;
 using Clean.Application.UseCase.Queries.Categories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.WebSockets;
-using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.RateLimiting;
+using System.Threading;
 
 namespace Clean.AdminPanel.Controllers
 {
     [Route("api/[controller]")]
+    [RequestTimeout(2000)]
     [ApiController]
-    [Authorize]
+    //[Authorize(Policy = "AdminCustom")]
     //[ServiceFilter(typeof(ServiceAvailabilityActionFilter))]
     //[ProducesResponseType(typeof(ResponseResultViewModel<AgentResponseViewModel>), StatusCodes.Status200OK)]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
         private readonly IMediator _mediator;
+        private readonly ILogger _logger;
 
-        public CategoryController(ICategoryService categoryService, IMediator mediator)
+        #region [-ctor-]
+        public CategoryController(ICategoryService categoryService,
+                                  IMediator mediator,
+                                  ILogger<CategoryController> logger)
         {
             _categoryService = categoryService;
             _mediator = mediator;
-        }
+            _logger = logger;
+        } 
+        #endregion
 
         [HttpPost("create")]
         //[ProducesResponseType(typeof(CategoryDto), StatusCodes.Status200OK)]
@@ -39,18 +45,39 @@ namespace Clean.AdminPanel.Controllers
         }
 
         [HttpGet("GetAll2")]
-        public async Task<IActionResult> GetAllAsync2()
+        [EnableRateLimiting("fixed")]
+        public async Task<IActionResult> GetAll2Async(CancellationToken cancellationToken)
         {
-            var result = await _categoryService.GetAllAsync2();
+            var result = await _categoryService.GetAllAsync2(cancellationToken);
             return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync([FromQuery] BaseFilterDto filter)
+        [HttpGet("GetAll")]
+        [RequestTimeout("MyPolicy")]
+        public async Task<IActionResult> GetAllAsync([FromQuery] BaseFilterDto filter,CancellationToken cancellationToken)
         {
+            await Task.Delay(8000, cancellationToken);
             var result = await _mediator.Send(new GetCategoryQuery(filter));
             return Ok(result);
         }
+
+
+        //[RequestTimeout("MyPolicy")]
+        [HttpGet("timeout-test")]
+        public async Task<IActionResult> TimeoutTest(CancellationToken token)
+        {
+            Console.WriteLine($"CanBeCanceled={token.CanBeCanceled}");
+
+            token.Register(() =>
+            {
+                Console.WriteLine("TOKEN CANCELED");
+            });
+
+            await Task.Delay(10000, token);
+
+            return Ok("Finished");
+        }
+
 
         [HttpGet("{id:long}")]
         public async Task<IActionResult> GetByIdAsync(long id)

@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Clean.Application\Clean.Application.csproj" />
+    <ProjectReference Include="..\Clean.EntityFrameworkCore\Clean.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>

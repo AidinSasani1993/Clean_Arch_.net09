@@ -19,6 +19,7 @@
 
         public const string FirstName = "نام باید فارسی باشد";
         public const string PersonOlde = "نام باید فارسی باشد";
+        public const string RateLimitingError = "شما بیش از حد مجاز درخواست ارسال کرده‌اید. لطفاً 48 ساعت دیگر مجدداً تلاش کنید.";
 
     }
 }

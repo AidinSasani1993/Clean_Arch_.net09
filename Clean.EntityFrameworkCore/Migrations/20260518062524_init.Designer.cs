@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clean.EntityFrameworkCore.Migrations
 {
     [DbContext(typeof(CleanDbContext))]
-    [Migration("20260427102837_test")]
-    partial class test
+    [Migration("20260518062524_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -223,9 +223,6 @@ namespace Clean.EntityFrameworkCore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<long?>("RoleId")
-                        .HasColumnType("bigint");
-
                     b.Property<long?>("RoleRef")
                         .HasColumnType("bigint");
 
@@ -238,9 +235,9 @@ namespace Clean.EntityFrameworkCore.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("RoleRef");
 
-                    b.ToTable("Users");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("Clean.Domain.Entities.Product", b =>
@@ -258,7 +255,7 @@ namespace Clean.EntityFrameworkCore.Migrations
                 {
                     b.HasOne("Clean.Domain.Entities.Roles.Role", "Role")
                         .WithMany("Users")
-                        .HasForeignKey("RoleId");
+                        .HasForeignKey("RoleRef");
 
                     b.Navigation("Role");
                 });

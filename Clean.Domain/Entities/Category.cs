@@ -43,12 +43,12 @@ namespace Clean.Domain.Entities
         #region [-Create(string title, string? description)-]
         public static Category Create(string title, string? description)
         {
-            ValidationTitle(title);
-            ValidationDescription(description);
+            var titleTrim = ValidationTitle(title);
+             var descriptionValidat = ValidationDescription(description);
             var category = new Category
             {
-                Title = title,
-                Description = description,
+                Title = titleTrim,
+                Description = descriptionValidat,
                 Test = "test"
             };
             return category;
@@ -92,7 +92,7 @@ namespace Clean.Domain.Entities
         }
 
         #region [-Validation Methods-]
-        private static void ValidationTitle(string title)
+        private static string ValidationTitle(string title)
         {
             if (string.IsNullOrWhiteSpace(title)) 
             {
@@ -108,11 +108,12 @@ namespace Clean.Domain.Entities
                 case < TitleMinLength:
                     throw new Exception(string.Format(ErrorMessage.CategoryTitleMinLength,TitleMinLength));
             }
+            return title;
         }
 
-        private static void ValidationDescription(string? description)
+        private static string ValidationDescription(string? description)
         {
-            if (string.IsNullOrWhiteSpace(description)) return;
+            if (string.IsNullOrWhiteSpace(description)) return null;
 
             description = description.Trim();
 
@@ -120,6 +121,7 @@ namespace Clean.Domain.Entities
             {
                 throw new Exception(string.Format(ErrorMessage.CategoryDescriptionMaxLength, DescriptionMaxLength));
             }
+            return description;
         }
 
 

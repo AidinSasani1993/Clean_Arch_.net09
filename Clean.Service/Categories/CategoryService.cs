@@ -5,27 +5,40 @@ using Clean.Application.Repositories;
 using Clean.Application.Services.CategoryServices;
 using Clean.Common.Exceptions;
 using Clean.Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Clean.Service.Categories
 {
     public class CategoryService : ICategoryService
     {
         private readonly ICategoryRepository _categoryRepository;
+        private readonly ILogger _logger;
 
-        public CategoryService(ICategoryRepository categoryRepository)
+        public CategoryService(ICategoryRepository categoryRepository,ILogger<CategoryService> logger)
         {
             _categoryRepository = categoryRepository;
+            _logger = logger;
         }
 
-        public async Task<IEnumerable<GetCategoryDto>> GetAllAsync2()
+        public async Task<IEnumerable<GetCategoryDto>> GetAllAsync2(CancellationToken cancellationToken)
         {
-            var category = await _categoryRepository.GetAllAsync();
-            var result = category.Select(x => new GetCategoryDto
+            try
             {
-                Title = x.Title,
-                Description = x.Description,
-            }).ToList();
-            return result;
+                _logger.LogInformation("تمامی دسته بندی ها متود دوم");
+                var category = await _categoryRepository.GetAllAsync();
+                var result = category.Select(x => new GetCategoryDto
+                {
+                    Title = x.Title,
+                    Description = x.Description,
+                }).ToList();
+                _logger.LogInformation("تمامی دسته بندی ها متود دوم اتمام یافت");
+                return result;
+            }
+            catch (Exception)
+            {
+                _logger.LogInformation("تمامی دسته بندی ها متود دوم به خطا خورد");
+                throw;
+            }
         }
 
         public async Task ActiveAsync(long id)
@@ -66,8 +79,7 @@ namespace Clean.Service.Categories
 
         public async Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync(BaseFilterDto dto)
         {
-            var result =
-                new PaginateViewModel<IEnumerable<GetCategoryDto>>();
+            var result = new PaginateViewModel<IEnumerable<GetCategoryDto>>();
             var skip = (dto.PageNumber - 1) * dto.PageSize;
             var query = await _categoryRepository.GetAllAsync();
             var category = query.Select(a => new GetCategoryDto()

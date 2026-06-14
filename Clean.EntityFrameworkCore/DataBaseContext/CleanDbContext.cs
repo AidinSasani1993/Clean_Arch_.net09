@@ -11,12 +11,10 @@ namespace Clean.EntityFrameworkCore.DataBaseContext
 {
     public class CleanDbContext : DbContext
     {
-        public CleanDbContext(DbContextOptions options) : base(options)
+        #region [-ctors-]
+        public CleanDbContext(DbContextOptions<CleanDbContext> options) : base(options)
         {
         }
-
-        #region [-ctors-]
-
 
         protected CleanDbContext()
         {
@@ -38,6 +36,7 @@ namespace Clean.EntityFrameworkCore.DataBaseContext
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
             base.OnModelCreating(modelBuilder);
         } 
         #endregion

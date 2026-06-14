@@ -13,5 +13,6 @@ namespace Clean.Application.Dtos.Users
         public string PhoneNumber { get; set; }
         public SexTypeEnum SexType { get; set; }
         public bool IsActive { get; set; }
+        public long RoleRef { get; set; }
     }
 }
