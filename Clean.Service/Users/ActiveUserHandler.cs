@@ -18,11 +18,6 @@ namespace Clean.Service.Users
         {
             var userId = context.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (context.User.Identity.IsAuthenticated == false)
-            {
-                return;
-            }
-
             if (!context.User.Identity.IsAuthenticated)
             {
                 return;
@@ -35,7 +30,7 @@ namespace Clean.Service.Users
 
             if (userId == null) return;
 
-            var user = await _context.Users.FirstOrDefaultAsync(a => a.Username == userId);
+            var user = await _context.Users.FirstOrDefaultAsync(a => a.Username == userId && a.Role.Title == requirement.RoleName);
             if (user == null) return;
 
             if (user.IsActive && !user.IsDeleted)
@@ -44,5 +39,11 @@ namespace Clean.Service.Users
             }
 
         }
+
+        //public override Task HandleAsync(AuthorizationHandlerContext context)
+        //{
+        //    return base.HandleAsync(context);
+        //}
+
     }
 }

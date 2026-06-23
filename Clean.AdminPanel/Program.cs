@@ -111,7 +111,8 @@ builder.Services.AddAuthorization(policy =>
 {
     policy.AddPolicy("AdminCustom", a =>
     {
-        a.Requirements.Add(new UserRequirement());
+        //a.Requirements.Add(new UserRequirement { RoleName = "Admin" });
+        a.RequireRole(["Admin","SupperAdmin","SupperEmployee"]);
     });
 });
 
@@ -186,7 +187,7 @@ builder.Services.AddRateLimiter(options =>
     options.AddFixedWindowLimiter("fixed", opt =>
     {
         opt.PermitLimit = 3;
-        opt.Window = TimeSpan.FromMinutes(2);
+        opt.Window = TimeSpan.FromSeconds(10);
         opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         opt.QueueLimit = 0;
     });

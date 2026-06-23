@@ -62,7 +62,7 @@ namespace Clean.Service.Users
         public async Task<GetTokenDto> Login(LoginDto dto)
         {
             var user = await _userRepository.GetByEmailAsync(dto.Email);
-
+            
             if (user is null) return null;
 
             //if (user.Password != HashPassword(dto.Password)) return null;
@@ -79,6 +79,7 @@ namespace Clean.Service.Users
                 Email = user.Email,
                 UserName = user.Username,
                 Role = user.RoleRef,
+                RoleTitle = user.Role.Title,
             };
 
             var claims = new List<Claim>
@@ -93,6 +94,7 @@ namespace Clean.Service.Users
                 new Claim("Email",map.Email),
                 new Claim("SexType",map.SexType.ToString()),
                 new Claim("RoleRef",map.Role.ToString()),
+                new Claim(ClaimTypes.Role,map.RoleTitle),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));

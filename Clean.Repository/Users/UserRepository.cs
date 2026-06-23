@@ -12,9 +12,10 @@ namespace Clean.Repository.Users
         {
         }
 
-        public async Task<User> GetByEmailAsync(string Email)
+        public async Task<User> GetByEmailAsync(string email)
         {
-            var query = await Db_Set.FirstOrDefaultAsync(a => a.Email == Email);
+            //var query = await Db_Set.Include(a => a.Role).FirstOrDefaultAsync(a => a.Email == Email);
+            var query = await Context.Users.Include(u => u.Role).FirstOrDefaultAsync(a => a.Email == email);
             return query;
         }
 

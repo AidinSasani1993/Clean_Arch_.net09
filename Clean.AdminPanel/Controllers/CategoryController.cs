@@ -52,6 +52,7 @@ namespace Clean.AdminPanel.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "AdminCustom")]
         [HttpGet("GetAll")]
         [RequestTimeout("MyPolicy")]
         public async Task<IActionResult> GetAllAsync([FromQuery] BaseFilterDto filter,CancellationToken cancellationToken)

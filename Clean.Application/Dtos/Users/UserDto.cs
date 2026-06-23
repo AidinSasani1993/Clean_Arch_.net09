@@ -14,5 +14,6 @@ namespace Clean.Application.Dtos.Users
         public SexTypeEnum SexType { get; set; }
         public bool IsActive { get; set; }
         public long? Role { get; set; }
+        public string? RoleTitle { get; set; }
     }
 }
