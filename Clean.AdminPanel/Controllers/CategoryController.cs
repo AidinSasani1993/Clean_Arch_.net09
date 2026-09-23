@@ -46,6 +46,7 @@ namespace Clean.AdminPanel.Controllers
 
         [HttpGet("GetAll2")]
         [EnableRateLimiting("fixed")]
+        [RequestTimeout(2000)]
         public async Task<IActionResult> GetAll2Async(CancellationToken cancellationToken)
         {
             var result = await _categoryService.GetAllAsync2(cancellationToken);

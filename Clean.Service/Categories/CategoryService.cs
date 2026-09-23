@@ -25,7 +25,8 @@ namespace Clean.Service.Categories
             try
             {
                 _logger.LogInformation("تمامی دسته بندی ها متود دوم");
-                var category = await _categoryRepository.GetAllAsync();
+                var category = await _categoryRepository.GetAllAsync(cancellationToken);
+                await Task.Delay(4000, cancellationToken);
                 var result = category.Select(x => new GetCategoryDto
                 {
                     Title = x.Title,
@@ -77,11 +78,11 @@ namespace Clean.Service.Categories
 
         }
 
-        public async Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync(BaseFilterDto dto)
+        public async Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync(BaseFilterDto dto, CancellationToken cancellationToken)
         {
             var result = new PaginateViewModel<IEnumerable<GetCategoryDto>>();
             var skip = (dto.PageNumber - 1) * dto.PageSize;
-            var query = await _categoryRepository.GetAllAsync();
+            var query = await _categoryRepository.GetAllAsync(cancellationToken);
             var category = query.Select(a => new GetCategoryDto()
             {
                 Title = a.Title,

@@ -42,11 +42,11 @@ namespace Clean.Service.Customers
             throw new NotImplementedException();
         }
 
-        public async Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync(BaseFilterDto filter)
+        public async Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync(BaseFilterDto filter, CancellationToken cancellationToken)
         {
             var result = new PaginateViewModel<IEnumerable<CustomerDto>>();
             var skip = (filter.PageNumber - 1) * filter.PageSize;
-            var customers = await _customerRepository.GetAllAsync();
+            var customers = await _customerRepository.GetAllAsync(cancellationToken);
             var resultData = customers.Select(a => new CustomerDto
             {
                 BirthDay = a.BirthDay,
@@ -87,19 +87,19 @@ namespace Clean.Service.Customers
             }
         }
 
-        public async Task<IEnumerable<CustomerDto>> GetAllAsync()
+        public async Task<IEnumerable<CustomerDto>> GetAllAsync(CancellationToken cancellationToken)
         {
             try
             {
                 Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId} شروع درخواست جدید");
-                var query = await _customerRepository.GetAllAsync();
+                var query = await _customerRepository.GetAllAsync(cancellationToken);
                 var result = query.Select(a => new CustomerDto
                 {
                     FirstName = a.FirstName,
                     LastName = a.LastName,
                     MobileNumber = a.MobileNumber,
                 }).ToList();
-                await Task.Delay(1000); 
+                await Task.Delay(2, cancellationToken);
                 Console.WriteLine($"Thread {Thread.CurrentThread.ManagedThreadId} پایان درخواست");
                 return result;
             }

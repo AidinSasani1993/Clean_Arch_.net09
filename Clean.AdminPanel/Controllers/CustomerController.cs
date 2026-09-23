@@ -26,16 +26,16 @@ namespace Clean.AdminPanel.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
         {
-            var result = await _customerService.GetAllAsync();
+            var result = await _customerService.GetAllAsync(cancellationToken);
             return Ok(new { Count = result.Count(), Customer2 = result.Take(5) });
         }
 
         [HttpGet("GetCustomerPaginate")]
-        public async Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync([FromQuery] BaseFilterDto filter)
+        public async Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync([FromQuery] BaseFilterDto filter, CancellationToken cancellationToken)
         {
-            return await _customerService.GetAllAsync(filter);
+            return await _customerService.GetAllAsync(filter, cancellationToken);
         }
 
     }

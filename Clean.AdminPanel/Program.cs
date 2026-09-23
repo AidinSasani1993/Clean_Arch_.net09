@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Timeouts;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IAuthorizationHandler, ActiveUserHandler>();
 
 builder.Services.AddDbContext<CleanDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("CleanDb")));
+//builder.Services.AddHealthChecks().AddDbContextCheck<CleanDbContext>();
 
 builder.Services.AddMediatR
     (cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
@@ -126,10 +128,11 @@ builder.Services.AddRequestTimeouts(options =>
 {
     options.DefaultPolicy = new RequestTimeoutPolicy
     {
-        Timeout = TimeSpan.FromSeconds(2),
+        Timeout = TimeSpan.FromMilliseconds(2),
         TimeoutStatusCode = StatusCodes.Status503ServiceUnavailable
     };
 });
+
 
 
 //builder.Services.AddCors(options =>
@@ -204,12 +207,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.MapGet("/test-timeout", async (CancellationToken ct) =>
-{
-    await Task.Delay(10000, ct);
-    return Results.Ok("Done");
-})
-.WithRequestTimeout(TimeSpan.FromSeconds(2));
+//app.MapGet("/test-timeout", async (CancellationToken ct) =>
+//{
+//    await Task.Delay(50, ct);
+//    return Results.Ok("درخواست لغو شد");
+//})
+//.WithRequestTimeout(TimeSpan.FromMilliseconds(20));
 
 app.Use(async (context, next) =>
 {

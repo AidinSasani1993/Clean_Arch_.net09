@@ -6,7 +6,7 @@ namespace Clean.Application.Services.CategoryServices
 {
     public interface ICategoryService
     {
-        Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync(BaseFilterDto dto);
+        Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> GetAllAsync(BaseFilterDto dto, CancellationToken cancellationToken);
         Task<IEnumerable<GetCategoryDto>> GetAllAsync2(CancellationToken cancellationToken);
         Task<GetCategoryDto> GetById(long id);
         Task<ResponseDto> CreateAsync(CategoryDto dto);

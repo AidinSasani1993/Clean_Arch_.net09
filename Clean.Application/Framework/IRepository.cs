@@ -8,7 +8,7 @@ namespace Clean.Application.Framework
                                         where TKey : struct
     {
 
-        Task<IEnumerable<TEntity>> GetAllAsync();
+        Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken);
         Task<TEntity> GetByIdAsync(TKey id);
         Task DeleteAsync(TKey id);
         Task CreateAsync(TEntity entity);

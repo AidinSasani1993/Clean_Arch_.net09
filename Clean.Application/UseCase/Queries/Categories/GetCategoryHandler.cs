@@ -16,7 +16,7 @@ namespace Clean.Application.UseCase.Queries.Categories
 
         public async Task<PaginateViewModel<IEnumerable<GetCategoryDto>>> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
         {
-            return await _categoryService.GetAllAsync(request.Filter);
+            return await _categoryService.GetAllAsync(request.Filter, cancellationToken);
         }
     }
 }

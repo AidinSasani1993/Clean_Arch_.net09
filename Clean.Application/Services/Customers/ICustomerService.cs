@@ -9,7 +9,7 @@ namespace Clean.Application.Services.Customers
         Task<long> UpdateAsync(CustomerDto dto);
         Task DeleteAsync(long id);
         Task<CustomerDto> GetByIdAsync(long id);
-        Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync(BaseFilterDto filter);
-        Task<IEnumerable<CustomerDto>> GetAllAsync();
+        Task<PaginateViewModel<IEnumerable<CustomerDto>>> GetAllAsync(BaseFilterDto filter, CancellationToken cancellationToken);
+        Task<IEnumerable<CustomerDto>> GetAllAsync(CancellationToken cancellationToken);
     }
 }

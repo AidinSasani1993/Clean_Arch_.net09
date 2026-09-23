@@ -44,9 +44,9 @@ namespace Clean.Repository.Framework
             return await EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(GetQueryable(predicate, orderBy, include, disableGlobalFilter, disableTracking));
         }
 
-        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken cancellationToken)
         {
-            var query = await Db_Set.AsNoTracking().ToListAsync();
+            var query = await Db_Set.AsNoTracking().ToListAsync(cancellationToken);
             return query;
         }
 
