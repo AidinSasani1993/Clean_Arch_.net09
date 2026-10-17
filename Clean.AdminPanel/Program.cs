@@ -156,20 +156,20 @@ var columnOptions = new ColumnOptions
 columnOptions.Store.Remove(StandardColumn.Properties);
 columnOptions.Store.Add(StandardColumn.LogEvent); 
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Information()
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .WriteTo.MSSqlServer(
-        connectionString: connectionString,
-        sinkOptions: new MSSqlServerSinkOptions
-        {
-            TableName = "Logs",
-            AutoCreateSqlTable = true 
-        },
-        columnOptions: columnOptions
-    )
-    .CreateLogger();
+//Log.Logger = new LoggerConfiguration()
+//    .MinimumLevel.Information()
+//    .Enrich.FromLogContext()
+//    .WriteTo.Console()
+//    .WriteTo.MSSqlServer(
+//        connectionString: connectionString,
+//        sinkOptions: new MSSqlServerSinkOptions
+//        {
+//            TableName = "Logs",
+//            AutoCreateSqlTable = true 
+//        },
+//        columnOptions: columnOptions
+//    )
+//    .CreateLogger();
 
 builder.Host.UseSerilog();
 
