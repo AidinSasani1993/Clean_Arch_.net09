@@ -12,7 +12,7 @@ using System.Threading;
 namespace Clean.AdminPanel.Controllers
 {
     [Route("api/[controller]")]
-    [RequestTimeout(2000)]
+    //[RequestTimeout(2000)]
     [ApiController]
     //[Authorize(Policy = "AdminCustom")]
     //[ServiceFilter(typeof(ServiceAvailabilityActionFilter))]
@@ -45,17 +45,17 @@ namespace Clean.AdminPanel.Controllers
         }
 
         [HttpGet("GetAll2")]
-        [EnableRateLimiting("fixed")]
-        [RequestTimeout(2000)]
+        //[EnableRateLimiting("fixed")]
+        //[RequestTimeout(2000)]
         public async Task<IActionResult> GetAll2Async(CancellationToken cancellationToken)
         {
             var result = await _categoryService.GetAllAsync2(cancellationToken);
             return Ok(result);
         }
 
-        [Authorize(Policy = "AdminCustom")]
+        //[Authorize(Policy = "AdminCustom")]
         [HttpGet("GetAll")]
-        [RequestTimeout("MyPolicy")]
+        //[RequestTimeout("MyPolicy")]
         public async Task<IActionResult> GetAllAsync([FromQuery] BaseFilterDto filter,CancellationToken cancellationToken)
         {
             await Task.Delay(8000, cancellationToken);
